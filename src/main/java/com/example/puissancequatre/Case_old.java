@@ -5,20 +5,20 @@ import javafx.scene.image.ImageView;
 
 public class Case extends ImageView {
 
-    private Jeton statut;
+    private EtatCase statut;
 
     public Case() {
-        this.statut = Jeton.Aucun;
+        this.statut = EtatCase.Aucun;
     }
 
-    public void set(Jeton j) {
-        Image image = (j == Jeton.Rouge ? new Image("Rouge.png") : new Image("Jaune.png"));
+    public void set(EtatCase j) {
+        Image image = (j == EtatCase.Rouge ? new Image("Rouge.png") : new Image("Jaune.png"));
         this.setImage(image);
         this.statut = j;
     }
 
 
-    public Jeton getStatut() {
+    public EtatCase getStatut() {
         return statut;
     }
 

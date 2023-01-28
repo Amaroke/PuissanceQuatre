@@ -123,16 +123,16 @@ public class Partie extends Application {
         r2.setOnMouseClicked(e -> {
             int colonne = (int) ((e.getX() - borderX) / (r.getWidth() / COLUMNS));
             // Gestion du placement du jeton.
-            if (boxes[colonne][0].getStatut() == Jeton.Aucun && !victoryState.isVisible()) {
+            if (boxes[colonne][0].getStatut() == EtatCase.Aucun && !victoryState.isVisible()) {
                 int rang = LINES - 1;
-                while (boxes[colonne][rang].getStatut() != Jeton.Aucun) {
+                while (boxes[colonne][rang].getStatut() != EtatCase.Aucun) {
                     rang--;
                 }
-                boxes[colonne][rang].set(gameTurn % 2 == playerNum ? Jeton.Rouge : Jeton.Jaune);
+                boxes[colonne][rang].set(gameTurn % 2 == playerNum ? EtatCase.Rouge : EtatCase.Jaune);
 
 
                 int[][] dirs = {{-1, -1}, {-1, 1}, {0, -1}, {-1, 0}};
-                Jeton color = (gameTurn % 2 == playerNum ? Jeton.Rouge : Jeton.Jaune);
+                EtatCase color = (gameTurn % 2 == playerNum ? EtatCase.Rouge : EtatCase.Jaune);
                 int max = 0;
                 int x;
                 int y;
@@ -161,8 +161,8 @@ public class Partie extends Application {
                 if (max >= ALIGNMENT) {
                     gameState.setVisible(false);
                     victoryState.setVisible(true);
-                    victoryState.setTextFill(color == Jeton.Rouge ? Color.RED : Color.YELLOW);
-                    victoryState.setText("Victoire " + (color == Jeton.Rouge ? "du joueur (rouge) !" : "de l'IA (jaune)."));
+                    victoryState.setTextFill(color == EtatCase.Rouge ? Color.RED : Color.YELLOW);
+                    victoryState.setText("Victoire " + (color == EtatCase.Rouge ? "du joueur (rouge) !" : "de l'IA (jaune)."));
                     gameTurn--;
                 }
 

@@ -1,5 +1,5 @@
 package com.example.puissancequatre;
 
-public enum Jeton {
+public enum EtatCase {
     Aucun, Jaune, Rouge
 }
