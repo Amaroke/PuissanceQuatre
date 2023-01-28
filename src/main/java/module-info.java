@@ -5,4 +5,6 @@ module com.example.puissancequatre {
 
     opens com.example.puissancequatre to javafx.fxml;
     exports com.example.puissancequatre;
+    exports old;
+    opens old to javafx.fxml;
 }

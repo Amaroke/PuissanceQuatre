@@ -6,13 +6,13 @@ import java.util.List;
 public class Etat {
 
     private Joueur joueur;
-    private Plateau plateau;
+    private final Plateau plateau;
 
-    public Etat(Plateau plateau){
+    public Etat(Plateau plateau) {
         this.plateau = plateau;
     }
 
-    public Etat(Etat etat){
+    public Etat(Etat etat) {
         plateau = new Plateau(etat.getPlateau());
         joueur = etat.getJoueur();
     }
@@ -29,9 +29,19 @@ public class Etat {
         this.joueur = joueur;
     }
 
-    public void jouerCoup(int columns){
-        EtatCase c = getJoueur() == Joueur.Humain ? EtatCase.Rouge : EtatCase.Jaune;
-
+    public void jouerCoup(int colonne) {
+        EtatCase etatCase = getJoueur() == Joueur.Humain ? EtatCase.Rouge : EtatCase.Jaune;
+        plateau.insererJeton(etatCase, colonne);
+        setJoueur(getJoueur() == Joueur.Humain ? Joueur.IA : Joueur.Humain);
     }
 
+    public List<Integer> getCoupsPossibles() {
+        List<Integer> coupsPossibles = new ArrayList<>();
+        for (int i = 0; i < plateau.getCOLUMNS(); i++) {
+            if (plateau.colonneNonPleine(i)) {
+                coupsPossibles.add(i);
+            }
+        }
+        return coupsPossibles;
+    }
 }

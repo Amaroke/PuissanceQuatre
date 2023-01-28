@@ -1,9 +1,10 @@
-package com.example.puissancequatre;
+package old;
 
+import com.example.puissancequatre.EtatCase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Case extends ImageView {
+public class Case_old extends ImageView {
 
     private EtatCase statut;
 

@@ -1,5 +1,6 @@
-package com.example.puissancequatre;
+package old;
 
+import com.example.puissancequatre.EtatCase;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
