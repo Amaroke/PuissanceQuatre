@@ -1,66 +1,53 @@
 package com.example.puissancequatre;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Noeud {
-
-    /* de ce que j'ai compris le noeud doit connaitre:
-    - parents
-    - fils
-    - nb desimulation
-    - une constante qui permet de regler un compromis (pas compris)
-    */
-
-    private ArrayList<Noeud> fils;
-    private int nbSimulations = 0;
-    private Noeud papa = null;
+    private Noeud noeudPere;
+    private ArrayList<Noeud> noeudsFils;
+    private int nbSimulations;
     private Etat etat;
-    private double c;
     private int coup;
-    private int valeurTotale = 0;
+    private int total = 0;
     private Joueur joueur;
 
 
-
-    public Noeud(Noeud papa, int coup) {
+    public Noeud(Noeud noeudPere, int coup) {
         nbSimulations = 0;
-        if(papa != null && coup != -1) {
-            etat = new Etat(papa.getEtat());
-
+        if (noeudPere != null && coup != -1) {
+            etat = new Etat(noeudPere.getEtat());
             this.coup = coup;
-            joueur = papa.joueur == Joueur.Humain ? Joueur.IA : Joueur.Humain;
+            joueur = noeudPere.joueur == Joueur.Humain ? Joueur.IA : Joueur.Humain;
             etat.jouerCoup(coup);
-        }else{
+        } else {
             this.coup = -1;
             this.etat = null;
         }
-        this.papa = papa;
-        fils = new ArrayList<>();
+        this.noeudPere = noeudPere;
+        noeudsFils = new ArrayList<>();
     }
 
-    public ArrayList<Noeud> getFils() {
-        return fils;
+    public ArrayList<Noeud> getNoeudsFils() {
+        return noeudsFils;
     }
 
-    public Noeud getBestChild() {
-        Noeud res = fils.get(0);
-        double highestBVal = Double.NEGATIVE_INFINITY;
-
-        for(Noeud fils : fils) {
-            if(fils.getNbSimulations() == 0) {
+    public Noeud getMeilleursFils() {
+        Noeud noeudsFils = this.noeudsFils.get(0);
+        double valeurBMax = Double.NEGATIVE_INFINITY;
+        for (Noeud fils : this.noeudsFils) {
+            if (fils.getNbSimulations() == 0) {
                 return fils;
             }
-            if(fils.computeBValeur() > highestBVal) {
-                highestBVal = fils.computeBValeur();
-                res = fils;
+            if (fils.calculerValeurB() > valeurBMax) {
+                valeurBMax = fils.calculerValeurB();
+                noeudsFils = fils;
             }
         }
-        return res;
+        return noeudsFils;
     }
 
-    public void setFils(ArrayList<Noeud> fils) {
-        this.fils = fils;
+    public void setNoeudsFils(ArrayList<Noeud> noeudsFils) {
+        this.noeudsFils = noeudsFils;
     }
 
     public int getNbSimulations() {
@@ -71,24 +58,16 @@ public class Noeud {
         this.nbSimulations = nbSimulations;
     }
 
-    public Noeud getPapa() {
-        return papa;
+    public Noeud getNoeudPere() {
+        return noeudPere;
     }
 
-    public void setPapa(Noeud papa) {
-        this.papa = papa;
+    public void setNoeudPere(Noeud noeudPere) {
+        this.noeudPere = noeudPere;
     }
 
     public void setEtat(Etat etat) {
         this.etat = etat;
-    }
-
-    public double getC() {
-        return c;
-    }
-
-    public void setC(double c) {
-        this.c = c;
     }
 
     public int getCoup() {
@@ -99,12 +78,12 @@ public class Noeud {
         this.coup = coup;
     }
 
-    public int getValeurTotale() {
-        return valeurTotale;
+    public int getTotal() {
+        return total;
     }
 
-    public void setValeurTotale(int valeurTotale) {
-        this.valeurTotale = valeurTotale;
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public Joueur getJoueur() {
@@ -115,36 +94,32 @@ public class Noeud {
         this.joueur = joueur;
     }
 
-    public double computeBValeur() {
-        return (valeurTotale/nbSimulations) + c * Math.sqrt(Math.log(papa.getNbSimulations())/nbSimulations);
+    public double calculerValeurB() {
+        return ((double)total / nbSimulations) + Math.sqrt(2) * Math.sqrt(Math.log(noeudPere.getNbSimulations()) / nbSimulations);
     }
 
-    public Noeud getFilsMaxVal() {
-        Noeud res = fils.get(0);
-        double highestVal = res.getValeurTotale();
-
-        for(Noeud fils : fils) {
-            if(fils.getValeurTotale() > highestVal) {
-                highestVal = fils.getValeurTotale();
-                res = fils;
+    public Noeud getValeurMaxFils() {
+        Noeud valeurMaxFils = noeudsFils.get(0);
+        double valeurMax = valeurMaxFils.getTotal();
+        for (Noeud fils : noeudsFils) {
+            if (fils.getTotal() > valeurMax) {
+                valeurMax = fils.getTotal();
+                valeurMaxFils = fils;
             }
         }
-
-        return res;
+        return valeurMaxFils;
     }
 
-    public Noeud getFilsRobusteVal() {
-        Noeud res = fils.get(0);
-        double highestVal = res.getNbSimulations();
-
-        for(Noeud fils : fils) {
-            if(fils.getNbSimulations() > highestVal) {
-                highestVal = fils.getNbSimulations();
-                res = fils;
+    public Noeud getFilsValeurRobuste() {
+        Noeud valeurRobusteFils = noeudsFils.get(0);
+        double valeurMax = valeurRobusteFils.getNbSimulations();
+        for (Noeud fils : noeudsFils) {
+            if (fils.getNbSimulations() > valeurMax) {
+                valeurMax = fils.getNbSimulations();
+                valeurRobusteFils = fils;
             }
         }
-
-        return res;
+        return valeurRobusteFils;
     }
 
     public Etat getEtat() {

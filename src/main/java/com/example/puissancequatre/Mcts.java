@@ -4,7 +4,7 @@ public class Mcts {
     private Noeud courant;
 
     public Mcts() {
-        courant = new Noeud(null);
+        //courant = new Noeud(null);
     }
 
 }
