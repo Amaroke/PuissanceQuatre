@@ -1,4 +1,4 @@
-package com.example.puissancequatre;
+package puissancequatre;
 
 import java.util.ArrayList;
 
@@ -9,15 +9,16 @@ public class Noeud {
     private Etat etat;
     private int coup;
     private int total = 0;
-    private Joueur joueur;
+    private EnumJoueur joueur;
 
+    //TODO Adapter à l'IA et commenter
 
     public Noeud(Noeud noeudPere, int coup) {
         nbSimulations = 0;
         if (noeudPere != null && coup != -1) {
             etat = new Etat(noeudPere.getEtat());
             this.coup = coup;
-            joueur = noeudPere.joueur == Joueur.Humain ? Joueur.IA : Joueur.Humain;
+            joueur = noeudPere.joueur == EnumJoueur.HUMAIN ? EnumJoueur.IA : EnumJoueur.HUMAIN;
             etat.jouerCoup(coup);
         } else {
             this.coup = -1;
@@ -86,11 +87,11 @@ public class Noeud {
         this.total = total;
     }
 
-    public Joueur getJoueur() {
+    public EnumJoueur getJoueur() {
         return joueur;
     }
 
-    public void setJoueur(Joueur joueur) {
+    public void setJoueur(EnumJoueur joueur) {
         this.joueur = joueur;
     }
 

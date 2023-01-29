@@ -1,10 +1,9 @@
-module com.example.puissancequatre {
+module ui {
     requires javafx.controls;
-    requires javafx.fxml;
 
 
-    opens com.example.puissancequatre to javafx.fxml;
-    exports com.example.puissancequatre;
-    exports old;
-    opens old to javafx.fxml;
+    opens puissancequatre to javafx.fxml;
+    exports puissancequatre;
+    exports ui;
+    opens ui to javafx.fxml;
 }

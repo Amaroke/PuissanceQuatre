@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.puissancequatre'
-    mainClass = 'com.example.puissancequatre.HelloApplication'
+    mainModule = 'ui'
+    mainClass = 'ui.PartieUI'
 }
 
 javafx {

@@ -1,11 +1,11 @@
-package com.example.puissancequatre;
+package puissancequatre;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Etat {
 
-    private Joueur joueur;
+    private EnumJoueur joueur;
     private final Plateau plateau;
 
     public Etat(Plateau plateau) {
@@ -21,18 +21,18 @@ public class Etat {
         return plateau;
     }
 
-    public Joueur getJoueur() {
+    public EnumJoueur getJoueur() {
         return joueur;
     }
 
-    public void setJoueur(Joueur joueur) {
+    public void setJoueur(EnumJoueur joueur) {
         this.joueur = joueur;
     }
 
     public void jouerCoup(int colonne) {
-        EtatCase etatCase = getJoueur() == Joueur.Humain ? EtatCase.Rouge : EtatCase.Jaune;
+        EnumJeton etatCase = getJoueur() == EnumJoueur.HUMAIN ? EnumJeton.ROUGE : EnumJeton.JAUNE;
         plateau.insererJeton(etatCase, colonne);
-        setJoueur(getJoueur() == Joueur.Humain ? Joueur.IA : Joueur.Humain);
+        setJoueur(getJoueur() == EnumJoueur.HUMAIN ? EnumJoueur.IA : EnumJoueur.HUMAIN);
     }
 
     public List<Integer> getCoupsPossibles() {
