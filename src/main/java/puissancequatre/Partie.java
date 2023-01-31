@@ -9,7 +9,7 @@ public class Partie {
     private final MCTS ia;
     EnumPartie etatPartie;
     int[] dernierCoupJoue = new int[2];
-    final PartieUI partieUI;
+    final PartieUI                                                                                                                                                                                                        partieUI;
 
 
     public Partie(Plateau plateau, MCTS ia, PartieUI partieUI) {

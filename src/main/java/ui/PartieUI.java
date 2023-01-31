@@ -1,6 +1,7 @@
 package ui;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -24,8 +25,9 @@ public class PartieUI extends Application {
     private Partie partie;
     private ImageView[][] casesUI;
     private static int previousSelection;
-    Label gameState;
-    Label victoryState;
+    private Label gameState;
+    private Label victoryState;
+    private Rectangle rectangle;
 
     @Override
     public void start(Stage primaryStage) {
@@ -82,6 +84,9 @@ public class PartieUI extends Application {
         gameState.setFont(Font.font("Arial", scene.getHeight() / 20));
         gameState.setLayoutX(borderX);
         gameState.layoutYProperty().bind(r.heightProperty());
+        gameState.setAlignment(Pos.CENTER);
+        gameState.setPrefHeight(75);
+        gameState.setMinWidth(scene.getWidth()/2);
 
         // Création de l'affichage de la victoire.
         victoryState = new Label("");
@@ -89,43 +94,46 @@ public class PartieUI extends Application {
         victoryState.setLayoutX(borderX);
         victoryState.layoutYProperty().bind(r.heightProperty());
         victoryState.setVisible(false);
+        victoryState.setAlignment(Pos.CENTER);
+        victoryState.setPrefHeight(75);
+        victoryState.setMinWidth(scene.getWidth()/2);
 
         root.getChildren().addAll(gameState, victoryState);
 
         // Création des cadres de positionnement.
-        Rectangle[] rects = new Rectangle[nbColonnes];
+        Rectangle[] rectangles = new Rectangle[nbColonnes];
         for (int i = 0; i < nbColonnes; i++) {
-            rects[i] = new Rectangle(0, 0, 10, 10);
-            rects[i].layoutXProperty().bind(r.widthProperty().divide(nbColonnes).multiply(i).add(borderX));
-            rects[i].heightProperty().bind(r.heightProperty());
-            rects[i].widthProperty().bind(r.widthProperty().divide(nbColonnes));
-            rects[i].setFill(Color.TRANSPARENT);
-            rects[i].setStroke(Color.BLACK);
-            rects[i].setStrokeType(StrokeType.INSIDE);
-            rects[i].setStrokeWidth(4);
-            rects[i].setVisible(false);
-            root.getChildren().addAll(rects[i]);
+            rectangles[i] = new Rectangle(0, 0, 10, 10);
+            rectangles[i].layoutXProperty().bind(r.widthProperty().divide(nbColonnes).multiply(i).add(borderX));
+            rectangles[i].heightProperty().bind(r.heightProperty());
+            rectangles[i].widthProperty().bind(r.widthProperty().divide(nbColonnes));
+            rectangles[i].setFill(Color.TRANSPARENT);
+            rectangles[i].setStroke(Color.BLACK);
+            rectangles[i].setStrokeType(StrokeType.INSIDE);
+            rectangles[i].setStrokeWidth(4);
+            rectangles[i].setVisible(false);
+            root.getChildren().addAll(rectangles[i]);
         }
 
-        Rectangle r2 = new Rectangle(0, 0, 10, 10);
-        r2.heightProperty().bind(r.heightProperty());
-        r2.widthProperty().bind(r.widthProperty());
-        r2.setFill(Color.TRANSPARENT);
-        root.getChildren().addAll(r2);
+        rectangle = new Rectangle(0, 0, 10, 10);
+        rectangle.heightProperty().bind(r.heightProperty());
+        rectangle.widthProperty().bind(r.widthProperty());
+        rectangle.setFill(Color.TRANSPARENT);
+        root.getChildren().addAll(rectangle);
 
         previousSelection = -1;
-        r2.setOnMouseMoved(e -> {
+        rectangle.setOnMouseMoved(e -> {
             int val = (int) ((e.getX() - borderX) / (r.getWidth() / nbColonnes));
             if (val != previousSelection) {
-                rects[val].setVisible(true);
+                rectangles[val].setVisible(true);
                 if (previousSelection > -1)
-                    rects[previousSelection].setVisible(false);
+                    rectangles[previousSelection].setVisible(false);
             }
             previousSelection = val;
         });
 
         // Le joueur joue.
-        r2.setOnMouseClicked(e -> {
+        rectangle.setOnMouseClicked(e -> {
             int colonne = (int) ((e.getX() - borderX) / (r.getWidth() / nbColonnes));
             // Gestion du placement du jeton.
             if (partie.getPlateau().colonneNonPleine(colonne) && partie.getEtatPartie() == EnumPartie.EN_COURS) {
@@ -133,8 +141,8 @@ public class PartieUI extends Application {
                 int[] dernierCoup = {colonne, ligne};
                 this.partie.setDernierCoupJoue(dernierCoup);
                 // Changement de joueur, rafraichissement de l'UI.
-                partie.changerJoueur();
                 partie.setEtatPartie();
+                partie.changerJoueur();
                 this.rafraichirUI();
                 this.faireJouerIA();
             }
@@ -154,12 +162,11 @@ public class PartieUI extends Application {
 
     public void faireJouerIA() {
         //TODO mettre un temps de latence pendant que l'IA joue (géré par MCTS ?)
-        if(partie.getJoueurActuel() == EnumJoueur.IA && partie.getEtatPartie() == EnumPartie.EN_COURS) {
+        if (partie.getJoueurActuel() == EnumJoueur.IA && partie.getEtatPartie() == EnumPartie.EN_COURS) {
             int colonne = partie.getIa().jouer(new Etat(partie.getPlateau()));
-            int ligne = partie.getPlateau().insererJeton(EnumJeton.ROUGE, colonne);
+            int ligne = partie.getPlateau().insererJeton(EnumJeton.JAUNE, colonne);
             int[] dernierCoup = {colonne, ligne};
             this.partie.setDernierCoupJoue(dernierCoup);
-            System.out.println(this.partie.getEtatPartie());
             partie.setEtatPartie();
             partie.changerJoueur();
             this.rafraichirUI();
@@ -177,18 +184,21 @@ public class PartieUI extends Application {
             }
         }
         // Affichage de l'état de fin de partie.
-        if(partie.getEtatPartie() != EnumPartie.EN_COURS) {
+        if (partie.getEtatPartie() != EnumPartie.EN_COURS) {
             gameState.setVisible(false);
-            if(partie.getEtatPartie() == EnumPartie.VICTOIRE_JAUNE) {
+            if (partie.getEtatPartie() == EnumPartie.VICTOIRE_JAUNE) {
+                victoryState.setStyle("-fx-text-fill: yellow");
                 victoryState.setText("Victoire de l'IA (jaune) !");
-            } else if(partie.getEtatPartie() == EnumPartie.VICTOIRE_ROUGE) {
+            } else if (partie.getEtatPartie() == EnumPartie.VICTOIRE_ROUGE) {
                 victoryState.setText("Victoire du joueur (rouge) !");
-            } else if(partie.getEtatPartie() == EnumPartie.MATCH_NUL) {
+                victoryState.setStyle("-fx-text-fill: red");
+            } else if (partie.getEtatPartie() == EnumPartie.MATCH_NUL) {
                 victoryState.setText("Match nul !");
+                victoryState.setStyle("-fx-text-fill: blue");
             }
             victoryState.setVisible(true);
         }
-
-        //TODO DESACTIVER INTERACTION JOUEUR SI TOUR DE LIA
+        // On désactive le rectangle permettant au joueur de jouer.
+        rectangle.setDisable(partie.getJoueurActuel() == EnumJoueur.IA);
     }
 }
