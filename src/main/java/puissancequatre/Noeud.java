@@ -126,4 +126,8 @@ public class Noeud {
     public Etat getEtat() {
         return etat;
     }
+
+    public void nbSimuPlusPlus() {
+        nbSimulations++;
+    }
 }

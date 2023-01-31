@@ -28,11 +28,7 @@ public class Plateau {
     }
 
     public EnumJeton[][] getPlateau() {
-        EnumJeton[][] res = new EnumJeton[COLUMNS][LINES];
-        for (int i = 0; i < LINES; i++) {
-            System.arraycopy(plateau[i], 0, res[i], 0, COLUMNS);
-        }
-        return res;
+        return plateau.clone();
     }
 
     public EnumJeton getCase(int x, int y) {

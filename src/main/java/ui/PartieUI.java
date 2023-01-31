@@ -33,7 +33,9 @@ public class PartieUI extends Application {
     public void start(Stage primaryStage) {
 
         // On crée la partie.
-        partie = new Partie(new Plateau(), new MCTS(), this);
+        MCTS mcts = new MCTS();
+        partie = new Partie(new Plateau(), mcts, this);
+        mcts.setPartie(partie);
         int nbColonnes = partie.getPlateau().getCOLUMNS();
         int nbLignes = partie.getPlateau().getLINES();
 
