@@ -55,10 +55,8 @@ public class PartieUI extends Application {
                 rafraichirUI();
             }
             if (event.getCode() == KeyCode.A) {
-                System.out.println("La touche A a été appuyée");
-            }
-            if (event.getCode() == KeyCode.T) {
-                System.out.println("La touche T a été appuyée");
+                partie.setAffichageIA();
+                rafraichirUI();
             }
             if (event.getCode() == KeyCode.ESCAPE) {
                 Platform.exit();
@@ -199,9 +197,13 @@ public class PartieUI extends Application {
 
     public void rafraichirUI() {
         // Changer l'affichage des options
-        options.setText("Appuyez sur la touche R, pour passer en mode " + (partie.isRobusteActive() ? "MAX" : "ROBUSTE") + ", la touche A pour changer l'affichage, la touche T pour changer le temps de réflexion de l'IA et ECHAP pour QUITTER.");
+        options.setText("Appuyez sur la touche R, pour passer en mode " + (partie.isRobusteActive() ? "MAX" : "ROBUSTE") + ", la touche A pour passer en affichage " + (partie.isAffichageIA() ? "ÉTAT PARTIE " : "RÉSULTATS IA ") + "et ECHAP pour QUITTER.");
         // Affichage de l'état de la partie
-        gameState.setText("C'est au tour " + (partie.getJoueurActuel() == EnumJoueur.HUMAIN ? "du joueur (rouge)." : "de l'IA (jaune)."));
+        if(partie.isAffichageIA()) {
+            gameState.setText("Nombres simulation totales : " + partie.getNbSimulations() + "     Probabilité de victoire actuelle : " + (int) partie.getProbaVictoire() + "%");
+        } else {
+            gameState.setText("C'est au tour " + (partie.getJoueurActuel() == EnumJoueur.HUMAIN ? "du joueur (rouge)." : "de l'IA (jaune)."));
+        }
         // Affichage des jetons
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {

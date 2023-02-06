@@ -8,6 +8,9 @@ public class Partie {
     private EnumPartie etatPartie;
     private boolean robusteActive;
 
+    private boolean affichageIA;
+    private int nbSimulations;
+    private double probaVictoire;
 
     public Partie(Plateau plateau, MCTS ia) {
         this.plateau = plateau;
@@ -15,6 +18,7 @@ public class Partie {
         this.ia = ia;
         this.etatPartie = EnumPartie.EN_COURS;
         this.robusteActive = false;
+        this.affichageIA = false;
     }
 
     public void changerJoueur() {
@@ -47,5 +51,29 @@ public class Partie {
 
     public void setRobusteActive() {
         this.robusteActive = !robusteActive;
+    }
+
+    public boolean isAffichageIA() {
+        return affichageIA;
+    }
+
+    public void setAffichageIA() {
+        this.affichageIA = !affichageIA;
+    }
+
+    public int getNbSimulations() {
+        return nbSimulations;
+    }
+
+    public void setNbSimulations(int nbSimulations) {
+        this.nbSimulations = nbSimulations;
+    }
+
+    public double getProbaVictoire() {
+        return probaVictoire;
+    }
+
+    public void setProbaVictoire(double probaVictoire) {
+        this.probaVictoire = probaVictoire;
     }
 }
