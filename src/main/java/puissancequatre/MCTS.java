@@ -5,94 +5,88 @@ import java.util.Random;
 
 public class MCTS {
 
-    //TODO FAIRE LIA
-
-    private Noeud courant;
+    private Noeud noeudCourant;
     private Partie partie;
-    private int cpt;
 
     public void setPartie(Partie partie) {
         this.partie = partie;
     }
 
     public int jouer(Etat etat) {
-        cpt = 0;
-        courant = new Noeud(null, -1);
-        courant.setEtat(etat);
-        courant.setJoueur(etat.getJoueur());
-        List<Integer> coups;
-
-        long fin;
+        noeudCourant = new Noeud(null, -1);
+        noeudCourant.setEtat(etat);
+        noeudCourant.setJoueur(etat.getJoueur());
+        List<Integer> coupsPossibles;
         int meilleurCoup;
         long debut = System.currentTimeMillis();
+        long fin = System.currentTimeMillis();
         Random random = new Random();
-        do {
-            if(courant.getNoeudsFils().size() == 0) {
-                if(courant.getNbSimulations() != 0) {
-                    coups = etat.getCoupsPossibles();
+        while ((fin - debut) < 200) {
+            if (noeudCourant.getNoeudsFils().size() == 0) {
+                if (noeudCourant.getNbSimulations() != 0) {
+                    coupsPossibles = etat.getCoupsPossibles();
                     int k = 0;
-                    while (k < coups.size() && coups.get(k) != -1) {
-                        courant.getNoeudsFils().add(new Noeud(courant, coups.get(k)));
+                    while (k < coupsPossibles.size() && coupsPossibles.get(k) != -1) {
+                        noeudCourant.ajouterFils(new Noeud(noeudCourant, coupsPossibles.get(k)));
                         k++;
                     }
-                    courant = courant.getNoeudsFils().get(random.nextInt(courant.getNoeudsFils().size()));
+                    noeudCourant = noeudCourant.getNoeudsFils().get(random.nextInt(noeudCourant.getNoeudsFils().size()));
                 }
-                int valeur = rollout();
-                while(courant.getNoeudPere() != null) {
-                    courant.nbSimuPlusPlus();
-                    courant.setTotal((int) (courant.getTotal() + valeur));
-                    courant = courant.getNoeudPere();
+                int valeur = lancerUneSimulation();
+                while (noeudCourant.getNoeudPere() != null) {
+                    noeudCourant.nbSimulationPlusPlus();
+                    noeudCourant.setTotal(noeudCourant.getTotal() + valeur);
+                    noeudCourant = noeudCourant.getNoeudPere();
                 }
-                courant.nbSimuPlusPlus();
-                courant.setTotal((int) (courant.getTotal() + valeur));
-            }else{
-                courant = courant.getMeilleursFils();
+                noeudCourant.nbSimulationPlusPlus();
+                noeudCourant.setTotal(noeudCourant.getTotal() + valeur);
+            } else {
+                noeudCourant = noeudCourant.getMeilleursFils();
             }
-
             fin = System.currentTimeMillis();
-
-        }while((fin - debut) < 3000);
-
-
-        while(courant.getNoeudPere() != null) {
-            courant = courant.getNoeudPere();
         }
 
-        if (courant.getNoeudsFils().size() != 0) {
-            meilleurCoup = courant.getValeurMaxFils().getCoup();
-        }else{
-            meilleurCoup = courant.getCoup();
+        while (noeudCourant.getNoeudPere() != null) {
+            noeudCourant = noeudCourant.getNoeudPere();
         }
+
+        if (noeudCourant.getNoeudsFils().size() != 0) {
+            if(partie.isRobusteActive()) {
+                meilleurCoup = noeudCourant.getValeurRobusteFils().getCoup();
+            } else {
+                meilleurCoup = noeudCourant.getValeurMaxFils().getCoup();
+            }
+        } else {
+            meilleurCoup = noeudCourant.getCoup();
+        }
+        System.out.println("Nombre de simulations totales : " + noeudCourant.getNbSimulations());
+        System.out.println("Nombre de parties gagnantes simulées : " + noeudCourant.getTotal());
         return meilleurCoup;
     }
 
-    public int rollout() {
+    public int lancerUneSimulation() {
+        Plateau p = new Plateau(partie.getPlateau());
         List<Integer> nbPossibilites;
         Random rand = new Random();
-        int coup, coupVictoire;
-        System.out.println(courant.getEtat().toString());
-        Etat e = new Etat(courant.getEtat());
-        EnumPartie fp;
-
-        while(true) {
-            partie.setEtatPartie();
-            fp = partie.getEtatPartie();
-            System.out.println(fp);
-            if (fp == EnumPartie.VICTOIRE_JAUNE) {
+        Etat e = new Etat(noeudCourant.getEtat());
+        EnumPartie etatPartie;
+        while (true) {
+            etatPartie = p.getEtatPlateau();
+            if (etatPartie == EnumPartie.VICTOIRE_JAUNE) {
                 return 1;
             }
-            if (fp == EnumPartie.VICTOIRE_ROUGE || fp == EnumPartie.MATCH_NUL) {
+            if (etatPartie == EnumPartie.VICTOIRE_ROUGE || etatPartie == EnumPartie.MATCH_NUL) {
                 return 0;
             }
+            int colonne;
             nbPossibilites = e.getCoupsPossibles();
-            System.out.println(nbPossibilites.size());
-            if(nbPossibilites.size() == 0) {
+            if (nbPossibilites.size() != 0) {
+                 colonne = nbPossibilites.get(rand.nextInt(nbPossibilites.size()));
+            } else {
                 return 0;
             }
-            coup = nbPossibilites.get(rand.nextInt(nbPossibilites.size()));
-
-            e.jouerCoup(coup);
-
+            e.jouerColonne(colonne);
+            p = e.getPlateau();
         }
     }
 

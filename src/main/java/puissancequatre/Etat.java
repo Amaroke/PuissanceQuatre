@@ -29,15 +29,17 @@ public class Etat {
         this.joueur = joueur;
     }
 
-    public void jouerCoup(int colonne) {
+    public void jouerColonne(int colonne) {
+        // On regarde qui joue
         EnumJeton etatCase = getJoueur() == EnumJoueur.HUMAIN ? EnumJeton.ROUGE : EnumJeton.JAUNE;
         plateau.insererJeton(etatCase, colonne);
+        // On change de joueur
         setJoueur(getJoueur() == EnumJoueur.HUMAIN ? EnumJoueur.IA : EnumJoueur.HUMAIN);
     }
 
     public List<Integer> getCoupsPossibles() {
         List<Integer> coupsPossibles = new ArrayList<>();
-        for (int i = 0; i < plateau.getCOLUMNS(); i++) {
+        for (int i = 0; i < 7; i++) {
             if (plateau.colonneNonPleine(i)) {
                 coupsPossibles.add(i);
             }
