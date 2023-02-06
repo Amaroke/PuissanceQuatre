@@ -1,6 +1,7 @@
 # Exécution du programme
 
-TODO
+Pour lancer l'application depuis la racine :
+> java -jar PuissanceQuatre.jar
 
 # Structure du programme
 
