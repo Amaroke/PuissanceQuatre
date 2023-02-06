@@ -1,7 +1,21 @@
 # Exécution du programme
 
-Pour lancer l'application depuis la racine :
-> java -jar PuissanceQuatre.jar
+### Prérequis
+
+* Java
+Ubuntu : `sudo apt install default-jre`
+Windows : https://www.java.com/fr/download/manual.jsp
+
+* JavaFX
+https://gluonhq.com/products/javafx/8
+
+### Execution
+
+Windows :
+>  java -jar --module-path "./openjfx-19.0.2.1_windows-x64_bin-sdk/javafx-sdk-19.0.2.1/lib" --add-modules javafx.controls ./PuissanceQuatre.jar
+
+Ubuntu :
+> java -jar --module-path "./openjfx-19.0.2.1_linux-x64_bin-sdk/javafx-sdk-19.0.2.1/lib" --add-modules javafx.controls ./PuissanceQuatre.jar
 
 # Structure du programme
 
