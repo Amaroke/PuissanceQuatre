@@ -2,19 +2,19 @@
 
 ### Prérequis
 
-* Java
-Ubuntu : `sudo apt install default-jre`
-Windows : https://www.java.com/fr/download/manual.jsp
+* Java<br>
+Ubuntu : `sudo apt install default-jre`<br>
+Windows : https://www.java.com/fr/download/manual.jsp<br>
 
-* JavaFX
-https://gluonhq.com/products/javafx/8
+* JavaFX<br>
+https://gluonhq.com/products/javafx/8<br>
 
 ### Execution
 
-Windows :
+Windows :<br>
 >  java -jar --module-path "./openjfx-19.0.2.1_windows-x64_bin-sdk/javafx-sdk-19.0.2.1/lib" --add-modules javafx.controls ./PuissanceQuatre.jar
 
-Ubuntu :
+Ubuntu :<br>
 > java -jar --module-path "./openjfx-19.0.2.1_linux-x64_bin-sdk/javafx-sdk-19.0.2.1/lib" --add-modules javafx.controls ./PuissanceQuatre.jar
 
 # Structure du programme
